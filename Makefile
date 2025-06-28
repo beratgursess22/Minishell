@@ -1,12 +1,12 @@
 NAME = MINISHELL
 
-SRC = executor/execute.c lexer/lexer.c main/main.c parser/parse.c pipe/pipe.c signal/signal.c utils/utils.c
+SRC = executor/execute.c lexer/lexer.c main/main.c parser/parse.c pipe/pipe.c signal/signal.c utils/utils.c built_in/*.c
 
 CC = cc 
 
 LIBFT = utils/libft/libft.a
 
-#CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror
 
 all: $(NAME) $(LIBFT)
 

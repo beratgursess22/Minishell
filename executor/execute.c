@@ -1,5 +1,6 @@
 #include "../library/minishell.h"
 
+
 void open_pipe_and_fork(t_parser *parser, char **env)
 {
     int pipe_count;
@@ -79,12 +80,13 @@ void execute(char **cmd, char **env, t_parser *parser)
     cmd_count = count_cmd(parser);
     if (cmd_count == 1)
     {
-        if (parser->built_type != 0)// ⬅️ cd, export, unset, exit gibi komutlar shell durumunu değiştirdiği için ana processte çalışmalı bu yüzden burada yaptık
-			//run_built_in(parser); // fork açmadan çalıştır
+        // printf("parse type : %d\n",  parser->built_type);
+        if (parser->built_type >= 0 && parser->built_type <= 6 )// ⬅️ cd, export, unset, exit gibi komutlar shell durumunu değiştirdiği için ana processte çalışmalı bu yüzden burada yaptık
+		    run_built_in(parser); // fork açmadan çalıştır.
         pid = fork();
         if (pid == 0)
         {
-            if (parser->built_type == 0)
+            if (parser->built_type == -1)// -1 yaptım yani bu builtin değil; ama 0 ve 6 arasında ise builtin fonksiyonudur
             {
                 path = find_path(*cmd, env);
                 if (!path)
@@ -96,8 +98,6 @@ void execute(char **cmd, char **env, t_parser *parser)
                 execve(path, cmd, env);
                 perror("execve");
             }
-            //else
-                //exit(run_built_in(parser)); //Child process düzgün kapansın diye exitle çıktım. sadece fork kapanıyor
         }
         else
             waitpid(pid, NULL, 0);
