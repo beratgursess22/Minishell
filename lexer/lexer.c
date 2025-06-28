@@ -1,7 +1,6 @@
+#include "../library/minishell.h"
 
-#include "../library/lexer.h"
-
-void	print_lexer(t_lexer *lst)
+void	print_lexer(t_lexer *lst) // deneme fonksiyonu, lexer'ın doğru çalışıp çalışmadığına bakmak için
 {
 	while (lst != NULL)
 	{
@@ -10,9 +9,9 @@ void	print_lexer(t_lexer *lst)
 	}
 }
 
-t_lexer	*new_lexer(char *str, t_token_type token)//token oluşturcaz eksik 
+t_lexer *create_new_lexer(char *str, t_token_type token) //sadece bir lexer node'u oluşturup tokeni ayarlar.
 {
-	t_lexer	*lexer;
+	t_lexer *lexer;
 
 	lexer = malloc(sizeof(t_lexer));
 	if (!lexer)
@@ -24,87 +23,86 @@ t_lexer	*new_lexer(char *str, t_token_type token)//token oluşturcaz eksik
 	return (lexer);
 }
 
-void	add_lexer(t_lexer **head, t_lexer *new)
+void add_new_lexer_to_list(t_lexer **head, t_lexer *new_lexer) //lexerlardan oluşan listenin sonuna yeni bir node ekler.
 {
-	t_lexer	*tmp;
+	t_lexer *tmp;
 
 	tmp = *head;
 	if (!tmp)
 	{
-		*head = new;
+		*head = new_lexer;
 		return ;
 	}
 	while (tmp->next != NULL)
 		tmp = tmp->next;
-	tmp->next = new;
-	new->prev = tmp;
+	tmp->next = new_lexer;
+	new_lexer->prev = tmp;
 }
 
-int lexer_helper_two(t_lexer **head, char *line, int i)
+void lexer_tokenize_input_and_output(t_lexer **head, char *line, int *i) // input ve outputları tokenize eder ve lexer listesine ekler.
 {
-	if (line[i] == '<')
+	if (line[*i] == '<')
 	{
-		add_lexer(head, new_lexer(ft_strdup("<"), TOKEN_INPUT));
-		i++;
+		add_new_lexer_to_list(head, create_new_lexer(ft_strdup("<"), TOKEN_INPUT));
+		(*i)++;
 	}
-	else if (line[i] == '>')
+	else if (line[*i] == '>')
 	{
-		add_lexer(head, new_lexer(ft_strdup(">"), TOKEN_OUTPUT));
-		i++;
+		add_new_lexer_to_list(head, create_new_lexer(ft_strdup(">"), TOKEN_OUTPUT));
+		(*i)++;
 	}
-	return (i);
 }
 
-
-int lexer_helper(t_lexer **head, char *line, int i)
+void lexer_tokenize_pipe_heredoc_append(t_lexer **head, char *line, int *i) // pipe, heredoc, appendleri tokenize eder ve lexer listesine ekler.
 {
-	if (line[i] == '|')
+	if (line[(*i)] == '|')
 	{
-		add_lexer(head, new_lexer(ft_strdup("|"), TOKEN_PIPE));
-		i++;
+		add_new_lexer_to_list(head, create_new_lexer(ft_strdup("|"), TOKEN_PIPE));
+		(*i)++;
 	}
-	else if (line[i] == '<' && line[i + 1] == '<')
+	else if (line[(*i)] == '<' && line[(*i) + 1] == '<')
 	{
-		add_lexer(head, new_lexer(ft_strdup("<<"),	 TOKEN_HEREDOC));
-		i += 2;
+		add_new_lexer_to_list(head, create_new_lexer(ft_strdup("<<"), TOKEN_HEREDOC));
+		(*i) += 2;
 	}
-	else if (line[i] == '>' && line[i + 1] == '>')
+	else if (line[(*i)] == '>' && line[(*i) + 1] == '>')
 	{
-		add_lexer(head, new_lexer(ft_strdup(">>"), TOKEN_APPEND));
-		i += 2;
+		add_new_lexer_to_list(head, create_new_lexer(ft_strdup(">>"), TOKEN_APPEND));
+		(*i) += 2;
 	}
-	else if (line[i] == '<' || line[i] == '>')
-		i = lexer_helper_two(head, line, i);
-	return (i);
 }
 
 
-t_lexer	*lexer(char *line)
-{
-	t_lexer	*head;
-	int		i;
-    int	start;
 
-    start = 0;
+t_lexer **lexer(char *line) //lexer ile bir linked list yapısı oluşturur. Gelen tipe göre tokenize eder.
+{
+	t_lexer **head;
+	int i;
+	int start;
+
+	start = 0;
 	i = 0;
-	head = NULL;
-	while (line[i])
+	head = malloc(sizeof(t_lexer *));
+    *head = NULL;
+	while(line[i])
 	{
 		while (ft_isspace(line[i]) == 1)
 			i++;
-		if (ft_strchr("|><", line[i]))
-			i = lexer_helper(&head, line, i);
+		if ((ft_strchr("<", line[i]) && ft_strchr("<", line[i + 1])) || (ft_strchr(">", line[i]) && ft_strchr(">", line[i + 1])) || ft_strchr("|", line[i]))
+			lexer_tokenize_pipe_heredoc_append(head, line, &i);
+		else if (ft_strchr("|", line[i]) || ft_strchr("<", line[i]) || ft_strchr(">", line[i]))
+			lexer_tokenize_input_and_output(head, line, &i);
 		else
 		{
 			start = i;
 			if (line[i] == '\"' || line[i] == '\'')
-			{
-				i = parse_line(line, &head, i, start);
-				continue;
-			}
-			i = getting_word(&head, i, start, line);
+				parse_quotes(line, head, &i, start);
+			else
+				add_word_to_parser_list(head, &i, start, line);
 		}
 	}
-	// print_lexer(head);
 	return (head);
 }
+// ayrıca bu fonksiyon bölünecek, sondaki else ayrı bir fonksiyona çekilicek.
+
+

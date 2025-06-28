@@ -1,7 +1,5 @@
-
 #include "../library/minishell.h"
 
- 
 void open_pipe_and_fork(t_parser *parser, char **env)
 {
     int pipe_count;
@@ -78,23 +76,28 @@ void execute(char **cmd, char **env, t_parser *parser)
     int cmd_count;
     pid_t pid;
     char *path;
-
     cmd_count = count_cmd(parser);
     if (cmd_count == 1)
     {
+        if (parser->built_type != 0)// ⬅️ cd, export, unset, exit gibi komutlar shell durumunu değiştirdiği için ana processte çalışmalı bu yüzden burada yaptık
+			//run_built_in(parser); // fork açmadan çalıştır
         pid = fork();
         if (pid == 0)
         {
-            path = find_path(*cmd, env);
-            if (!path)
+            if (parser->built_type == 0)
             {
-                ft_putstr_fd("Komut bulunamadı: ", 2);
-				ft_putendl_fd(cmd[0], 2);
-				exit(127);
+                path = find_path(*cmd, env);
+                if (!path)
+                {
+                    ft_putstr_fd("Komut bulunamadı: ", 2);
+                    ft_putendl_fd(cmd[0], 2);
+                    exit(127);
+                }
+                execve(path, cmd, env);
+                perror("execve");
             }
-            execve(path, cmd, env);
-            perror("execve");
-            exit(127);
+            //else
+                //exit(run_built_in(parser)); //Child process düzgün kapansın diye exitle çıktım. sadece fork kapanıyor
         }
         else
             waitpid(pid, NULL, 0);

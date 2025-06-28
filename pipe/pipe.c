@@ -24,7 +24,7 @@ char  *find_path(char *cmd, char **env)
     i = 0;
     if (cmd[0] == '/' || (cmd[0] == '/' && cmd[1] == '.'))
     {
-        if (access (cmd, F_OK | X_OK) == 0)
+        if (access(cmd, F_OK | X_OK) == 0)
             return (ft_strdup(cmd));
         else
             return (NULL);
