@@ -1,8 +1,8 @@
 #include "../library/built_in.h"
 #include "../library/minishell.h"
+#include "../library/enviroment.h"
 
-
-
+//echo pwd env shell ortamını etkilemeyen built in fonksiyonları diğerleri etkiliyor o yüzden env lazım
 
 void add_built_in_token(t_parser **head) // düzenlenicek.
 {
@@ -29,12 +29,12 @@ void add_built_in_token(t_parser **head) // düzenlenicek.
 }
 
 
-// int run_built_in(t_parser *parser) // hangi built_in olduğuna göre gerekli fonksiyonu çalıştırır.Built-in tokenlerine göre bakar
+// int run_built_in(t_parser *parser, char **env) // hangi built_in olduğuna göre gerekli fonksiyonu çalıştırır.Built-in tokenlerine göre bakar
 // {
 // 	if (parser->built_type == ECHO)
 // 		return (built_in_echo(parser));
 // 	else if (parser->built_type == CD)
-// 		return (built_in_cd(parser));
+// 		return (built_in_cd(parser, env));
 // 	else if (parser->built_type == PWD)
 // 		return (built_in_pwd(parser));
 // 	else if (parser->built_type == EXPORT)
@@ -51,14 +51,14 @@ void add_built_in_token(t_parser **head) // düzenlenicek.
 
 
 
-int run_built_in(t_parser *parser)
+int run_built_in(t_parser *parser, t_main_struct *main_struct)
 {
     if (parser->built_type == ECHO)
     	return (built_in_echo(parser));
     else if (parser->built_type == CD)
     {
         printf("DEBUG: running built-in CD\n");
-        // return (built_in_cd(parser)); yapılcak
+        return (built_in_cd(parser, main_struct->env_struct));
     }
     else if (parser->built_type == PWD)
         return (built_in_pwd(parser));

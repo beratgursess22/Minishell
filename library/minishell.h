@@ -11,11 +11,17 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include "built_in.h"
+#include "enviroment.h"
 
-
+typedef struct s_main_struct
+{
+	t_parser *parser_struct;
+	t_enviroment **env_struct;
+	char **env;
+} t_main_struct;
 
 void singal_take_promt(void);
 void singal_handler(int singal);
-void execute(char **cmd, char **env, t_parser *parser);
+void execute(char **cmd, t_main_struct *main_struct, t_parser *parser);
 int count_cmd(t_parser *parser);
 #endif

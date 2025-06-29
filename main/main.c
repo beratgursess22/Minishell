@@ -13,9 +13,14 @@
 
 int	main(int argc, char **argv, char **envp)
 {
+	t_enviroment **env;
+	t_main_struct *main_struct;
 	char	*line;
 	pid_t pid;
 
+	init_env(envp, env);
+	main_struct->env = envp;
+	main_struct->env_struct = env;
 	while (1)
 	{
 		line = readline("minishell$ ");
@@ -32,11 +37,9 @@ int	main(int argc, char **argv, char **envp)
 		t_parser *parsed = main_parse_function(*tokens);
 		add_built_in_token(&parsed);
 		// print_cmds(parsed);
-		execute(parsed->args, envp, parsed);
+		execute(parsed->args, main_struct, parsed);
 		free(line);
 	}
-
-
 }
 
 

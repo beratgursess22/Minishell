@@ -1,5 +1,5 @@
 #include "../library/minishell.h"
-
+#include "../library/enviroment.h"
 
 void open_pipe_and_fork(t_parser *parser, char **env)
 {
@@ -72,30 +72,31 @@ void open_pipe_and_fork(t_parser *parser, char **env)
     }
 }
 
-void execute(char **cmd, char **env, t_parser *parser)
+void execute(char **cmd, t_main_struct *main_struct, t_parser *parser)
 {
     int cmd_count;
     pid_t pid;
     char *path;
+
     cmd_count = count_cmd(parser);
     if (cmd_count == 1)
     {
         // printf("parse type : %d\n",  parser->built_type);
         if (parser->built_type >= 0 && parser->built_type <= 6 )// ⬅️ cd, export, unset, exit gibi komutlar shell durumunu değiştirdiği için ana processte çalışmalı bu yüzden burada yaptık
-		    run_built_in(parser); // fork açmadan çalıştır.
+		    run_built_in(parser, main_struct); // fork açmadan çalıştır.
         pid = fork();
         if (pid == 0)
         {
             if (parser->built_type == -1)// -1 yaptım yani bu builtin değil; ama 0 ve 6 arasında ise builtin fonksiyonudur
             {
-                path = find_path(*cmd, env);
+                path = find_path(*cmd, main_struct->env);
                 if (!path)
                 {
                     ft_putstr_fd("Komut bulunamadı: ", 2);
                     ft_putendl_fd(cmd[0], 2);
                     exit(127);
                 }
-                execve(path, cmd, env);
+                execve(path, cmd, main_struct->env);
                 perror("execve");
             }
         }
@@ -103,7 +104,7 @@ void execute(char **cmd, char **env, t_parser *parser)
             waitpid(pid, NULL, 0);
     }
     else
-        open_pipe_and_fork(parser, env);
+        open_pipe_and_fork(parser, main_struct->env);
 }
 
 
