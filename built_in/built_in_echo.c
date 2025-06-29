@@ -27,7 +27,7 @@ int built_in_echo(t_parser *parser) // echo taklit
 
     i = 1;
     n = 1;
-    if (parser->args[1] && echo_help_for_n(parser->args[1]))
+    while (parser->args[i] && echo_help_for_n(parser->args[i]))
     {
 		n = 0;
 		i++;

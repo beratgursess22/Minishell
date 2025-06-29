@@ -18,6 +18,7 @@ typedef struct s_main_struct
 	t_parser *parser_struct;
 	t_enviroment **env_struct;
 	char **env;
+
 } t_main_struct;
 
 void singal_take_promt(void);

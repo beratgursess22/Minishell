@@ -21,14 +21,16 @@ void add_new_node_for_env(t_enviroment **head, t_enviroment *env) // enviroment 
 {
     t_enviroment *temp;
 
-    temp = *head;
-    if (!temp)
+    if (!(*head))
     {
         *head = env;
         return ;
     }
+    temp = *head;
     while (temp->next)
+    {
         temp = temp->next;
+    }
     temp->next = env;
 }
 
@@ -58,7 +60,7 @@ char *get_env_value(const char *key, t_enviroment *env)//env listesinden belirli
     while (env)
     {
         if (ft_strcmp(env->key, key) == 0)
-            return (env->value);
+            return (ft_strdup(env->value));
         env = env->next;
     }
     return (NULL);
@@ -77,15 +79,18 @@ void update_env_value(const char *key, const char *value, t_enviroment **env)//v
             tmp->value = ft_strdup(value);
             return ;
         }
+        tmp = tmp->next;
     }
-    tmp = tmp->next;
     //eğer yoksa yeni node oluştur ve ekle.
     add_new_node_for_env(env, create_new_node_for_env(ft_strdup(key), ft_strdup(value)));
 }
 
+
+
 void init_env(char **envp, t_enviroment **env_list)
 {
     t_enviroment *new_node;
+
     char *key;
     char *value;
     int i;

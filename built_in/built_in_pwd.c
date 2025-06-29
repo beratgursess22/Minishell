@@ -7,7 +7,7 @@
 
 int built_in_pwd(t_parser *parser)
 {
-    char cwd[1024];
+    char cwd[4096];
 
    (void)parser;
     if (getcwd(cwd, sizeof(cwd)) != NULL)
