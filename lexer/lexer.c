@@ -97,7 +97,7 @@ t_lexer **lexer(char *line) //lexer ile bir linked list yapısı oluşturur. Gel
 			start = i;
 			if (line[i] == '\"' || line[i] == '\'')
 				parse_quotes(line, head, &i, start);
-			else
+			else 
 				add_word_to_parser_list(head, &i, start, line);
 		}
 	}

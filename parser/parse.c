@@ -42,19 +42,35 @@ void add_word_to_parser_list(t_lexer **head, int *i, int start, char *line) // |
 }
 
 
+// void parse_quotes(char *line, t_lexer **head, int *i, int start) //"" ve '' içlerini bir arada alıp lexer'a ekliyor.
+// {
+// 	char quote;
+// 	quote = line[(*i)];
+// 	(*i)++;
+// 	while (line[(*i)] && line[(*i)] != quote)
+// 		(*i)++;
+// 	if (line[(*i)] == quote)
+// 		(*i)++;
+// 	if (line[(*i) - 1] != quote)
+// 		exit(0); //error handling eklenicek
+// 	add_new_lexer_to_list(head, create_new_lexer(ft_strndup(&line[start], (*i) - start),
+// 				TOKEN_WORD));
+// }
+
 void parse_quotes(char *line, t_lexer **head, int *i, int start) //"" ve '' içlerini bir arada alıp lexer'a ekliyor.
 {
-	char quote;
-	quote = line[(*i)];
-	(*i)++;
-	while (line[(*i)] && line[(*i)] != quote)
-		(*i)++;
-	if (line[(*i)] == quote)
-		(*i)++;
-	if (line[(*i) - 1] != quote)
-		exit(0); //error handling eklenicek
-	add_new_lexer_to_list(head, create_new_lexer(ft_strndup(&line[start], (*i) - start),
-				TOKEN_WORD));
+    char quote = line[(*i)];
+    (*i)++;
+    while (line[(*i)] && line[(*i)] != quote)
+        (*i)++;
+    if (line[(*i)] == quote)
+        (*i)++;
+    
+    // BUNDAN SONRA HEMEN ALFANUMERİKLERİ DE DEVAM ET
+    while (line[(*i)] && !ft_isspace(line[(*i)]) && !ft_strchr("|<>", line[(*i)]))
+        (*i)++;
+
+    add_new_lexer_to_list(head, create_new_lexer(ft_strndup(&line[start], (*i) - start), TOKEN_WORD));
 }
 
 

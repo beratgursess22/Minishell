@@ -45,7 +45,6 @@ int	main(int argc, char **argv, char **envp)
 			add_history(line);
 		t_lexer **tokens = lexer(line);
 		expander(*tokens, main_struct->env_struct, 0);
-		//expander fonksiyon ilk expander mı, varsa genişletme yap, 
 		t_parser *parsed = main_parse_function(*tokens);
 		add_built_in_token(&parsed);
 		execute(parsed->args, main_struct, parsed);
