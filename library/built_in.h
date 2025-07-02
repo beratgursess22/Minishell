@@ -10,7 +10,6 @@ typedef struct s_main_struct t_main_struct;
 int run_built_in(t_parser *parser, t_main_struct *main_struct);
 void add_built_in_token(t_parser **head);
 
-
 // built echo
 int built_in_echo(t_parser *parser);
 int echo_help_for_n (char *str);
@@ -31,5 +30,12 @@ int built_in_env(t_enviroment *env_list);
 //built export
 int built_in_export(t_parser *parser, t_enviroment **env);
 int print_export_list(t_enviroment *env_list);
+
+// built_in_unset
+int built_in_unset(t_parser *parser, t_enviroment **env);
+
+
+//debug 
+void print_env_list(t_enviroment *env_list);
 
 #endif

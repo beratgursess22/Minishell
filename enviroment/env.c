@@ -81,7 +81,6 @@ void update_env_value(const char *key, const char *value, t_enviroment **env)//v
         }
         tmp = tmp->next;
     }
-    //eğer yoksa yeni node oluştur ve ekle.
     add_new_node_for_env(env, create_new_node_for_env(ft_strdup(key), ft_strdup(value)));
 }
 

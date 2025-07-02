@@ -28,8 +28,8 @@ int	main(int argc, char **argv, char **envp)
 	char	*line;
 	pid_t pid;
 
+
 	init_env(envp, env_list);
-	// print_env_list(*env_list);
 	main_struct->env = envp;
 	main_struct->env_struct = env_list;
 	while (1)

@@ -36,12 +36,9 @@ int run_built_in(t_parser *parser, t_main_struct *main_struct)
     else if (parser->built_type == PWD)
         return (built_in_pwd(parser));
     else if (parser->built_type == EXPORT)
-        return (built_in_export(parser, main_struct->env_struct));// yapılıyor Bitmedi hata var bakabilrisen bak cano 
+        return (built_in_export(parser, main_struct->env_struct));
     else if (parser->built_type == UNSET)
-    {
-        printf("DEBUG: running built-in UNSET\n");
-        // return (built_in_unset(parser)); yapılcak ecede 
-    }
+        return (built_in_unset(parser, main_struct->env_struct));
     else if (parser->built_type == ENV)
 		return(built_in_env(*main_struct->env_struct));
     else if (parser->built_type == EXIT)

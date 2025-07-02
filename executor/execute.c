@@ -26,7 +26,6 @@ void open_pipe_and_fork(t_parser *parser, char **env)
         }
         i++;
     }
-
     i = 0;
     while (current)
     {
@@ -81,9 +80,11 @@ void execute(char **cmd, t_main_struct *main_struct, t_parser *parser)
     cmd_count = count_cmd(parser);
     if (cmd_count == 1)
     {
-        // printf("parse type : %d\n",  parser->built_type);
         if (parser->built_type >= 0 && parser->built_type <= 6 )// ⬅️ cd, export, unset, exit gibi komutlar shell durumunu değiştirdiği için ana processte çalışmalı bu yüzden burada yaptık
-		    run_built_in(parser, main_struct); // fork açmadan çalıştır.
+		{
+            run_built_in(parser, main_struct); // fork açmadan çalıştır.
+            return ;
+        }
         pid = fork();
         if (pid == 0)
         {
@@ -98,6 +99,7 @@ void execute(char **cmd, t_main_struct *main_struct, t_parser *parser)
                 }
                 execve(path, cmd, main_struct->env);
                 perror("execve");
+                exit(127);
             }
         }
         else
@@ -106,5 +108,3 @@ void execute(char **cmd, t_main_struct *main_struct, t_parser *parser)
     else
         open_pipe_and_fork(parser, main_struct->env);
 }
-
-
