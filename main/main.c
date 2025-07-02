@@ -11,6 +11,8 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
+
+
 void print_env_list(t_enviroment *env_list)
 {
     while (env_list != NULL)
@@ -19,8 +21,6 @@ void print_env_list(t_enviroment *env_list)
         env_list = env_list->next;
     }
 }
-
-
 int	main(int argc, char **argv, char **envp)
 {
 	t_enviroment **env_list = malloc(sizeof(t_enviroment *));
@@ -44,11 +44,10 @@ int	main(int argc, char **argv, char **envp)
 		if (line[0] != '\0') 
 			add_history(line);
 		t_lexer **tokens = lexer(line);
-		// print_lexer(*tokens);
+		expander(*tokens, main_struct->env_struct, 0);
 		//expander fonksiyon ilk expander mı, varsa genişletme yap, 
 		t_parser *parsed = main_parse_function(*tokens);
 		add_built_in_token(&parsed);
-		// print_cmds(parsed);
 		execute(parsed->args, main_struct, parsed);
 		free(line);
 	}

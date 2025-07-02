@@ -13,6 +13,9 @@
 #include "built_in.h"
 #include "enviroment.h"
 
+#include "expander.h"
+
+
 typedef struct s_main_struct
 {
 	t_parser *parser_struct;
@@ -25,4 +28,5 @@ void singal_take_promt(void);
 void singal_handler(int singal);
 void execute(char **cmd, t_main_struct *main_struct, t_parser *parser);
 int count_cmd(t_parser *parser);
+
 #endif
