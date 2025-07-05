@@ -12,7 +12,13 @@
 #include <sys/wait.h>
 #include "built_in.h"
 #include "enviroment.h"
-
+#include "../library/minishell.h"
+#include "../library/enviroment.h"
+#include <fcntl.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 #include "expander.h"
 
 
