@@ -1,6 +1,6 @@
 NAME = MINISHELL
 
-SRC = executor/execute.c lexer/lexer.c main/main.c parser/parse.c pipe/pipe.c signal/signal.c utils/utils.c built_in/*.c enviroment/*.c expander/*.c
+SRC = executor/execute.c lexer/lexer.c main/main.c parser/parse.c pipe/pipe.c signal/signal.c utils/utils.c built_in/*.c enviroment/*.c expander/*.c herodoc/*.c
 
 CC = cc 
 

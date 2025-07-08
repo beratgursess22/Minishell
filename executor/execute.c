@@ -1,5 +1,7 @@
 #include "../library/minishell.h"
 #include "../library/enviroment.h"
+#include "../library/herodoc.h"
+
 
 void open_pipe_and_fork(t_parser *parser, char **env)
 {
@@ -32,6 +34,7 @@ void open_pipe_and_fork(t_parser *parser, char **env)
         pid = fork();
         if (pid == 0)
         {
+            redirector(parser);
             if (i != 0)
                 dup2(pipes[i - 1][0], 0);
             if (current->next)
@@ -88,8 +91,10 @@ void execute(char **cmd, t_main_struct *main_struct, t_parser *parser)
         pid = fork();
         if (pid == 0)
         {
+
             if (parser->built_type == -1)// -1 yaptım yani bu builtin değil; ama 0 ve 6 arasında ise builtin fonksiyonudur
-            {
+            {        
+                redirector(parser);       
                 path = find_path(*cmd, main_struct->env);
                 if (!path)
                 {

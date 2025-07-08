@@ -42,21 +42,6 @@ void add_word_to_parser_list(t_lexer **head, int *i, int start, char *line) // |
 }
 
 
-// void parse_quotes(char *line, t_lexer **head, int *i, int start) //"" ve '' içlerini bir arada alıp lexer'a ekliyor.
-// {
-// 	char quote;
-// 	quote = line[(*i)];
-// 	(*i)++;
-// 	while (line[(*i)] && line[(*i)] != quote)
-// 		(*i)++;
-// 	if (line[(*i)] == quote)
-// 		(*i)++;
-// 	if (line[(*i) - 1] != quote)
-// 		exit(0); //error handling eklenicek
-// 	add_new_lexer_to_list(head, create_new_lexer(ft_strndup(&line[start], (*i) - start),
-// 				TOKEN_WORD));
-// }
-
 void parse_quotes(char *line, t_lexer **head, int *i, int start) //"" ve '' içlerini bir arada alıp lexer'a ekliyor.
 {
     char quote = line[(*i)];
@@ -94,26 +79,31 @@ void fill_args_to_parser(t_parser *cmd, t_lexer **lexer) //Komutun argümanları
 
     i = 0;
     while (*lexer && (*lexer)->type != TOKEN_PIPE)
-		{
-			if ((*lexer)->type == TOKEN_WORD)
-				cmd->args[i++] = ft_strdup((*lexer)->word);
-            else
-                handle_redirection(cmd, *lexer);
+    {
+        if ((*lexer)->type == TOKEN_WORD)
+            cmd->args[i++] = ft_strdup((*lexer)->word);
+        else
+        {
+            handle_redirection(cmd, *lexer);
             *lexer = (*lexer)->next;
         }
+        *lexer = (*lexer)->next;
+    }
     cmd->args[i] = NULL;
 }
 
-void handle_redirection(t_parser *cmd, t_lexer *lexer) //Redirection (input/output/heredoc/append) parametrelerini ayıklar.
+void handle_redirection(t_parser *cmd, t_lexer *lexer)
 {
+    if (!lexer->next || lexer->next->type != TOKEN_WORD)
+        return; 
     if (lexer->type == TOKEN_INPUT)
-        cmd->infile = ft_strdup(lexer->word);
+        cmd->infile = ft_strdup(lexer->next->word);
     else if (lexer->type == TOKEN_OUTPUT)
-        cmd->outfile = ft_strdup(lexer->word);
+        cmd->outfile = ft_strdup(lexer->next->word);
     else if (lexer->type == TOKEN_HEREDOC)
-        cmd->here_doc = ft_strdup(lexer->word);
+        cmd->here_doc = ft_strdup(lexer->next->word);
     else if (lexer->type == TOKEN_APPEND)
-        cmd->append = ft_strdup(lexer->word);
+        cmd->append = ft_strdup(lexer->next->word);
 }
 
 

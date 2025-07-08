@@ -46,6 +46,7 @@ int	main(int argc, char **argv, char **envp)
 		t_lexer **tokens = lexer(line);
 		expander(*tokens, main_struct->env_struct, 0);
 		t_parser *parsed = main_parse_function(*tokens);
+		
 		add_built_in_token(&parsed);
 		execute(parsed->args, main_struct, parsed);
 		free(line);

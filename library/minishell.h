@@ -20,6 +20,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "expander.h"
+#include "herodoc.h"
 
 
 typedef struct s_main_struct
