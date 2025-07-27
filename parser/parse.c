@@ -50,8 +50,6 @@ void parse_quotes(char *line, t_lexer **head, int *i, int start) //"" ve '' içl
         (*i)++;
     if (line[(*i)] == quote)
         (*i)++;
-    
-    // BUNDAN SONRA HEMEN ALFANUMERİKLERİ DE DEVAM ET
     while (line[(*i)] && !ft_isspace(line[(*i)]) && !ft_strchr("|<>", line[(*i)]))
         (*i)++;
 

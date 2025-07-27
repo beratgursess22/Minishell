@@ -101,6 +101,7 @@ t_lexer **lexer(char *line) //lexer ile bir linked list yapısı oluşturur. Gel
 				add_word_to_parser_list(head, &i, start, line);
 		}
 	}
+	print_lexer(*head);
 	return (head);
 }
 // ayrıca bu fonksiyon bölünecek, sondaki else ayrı bir fonksiyona çekilicek.
