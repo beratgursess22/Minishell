@@ -67,7 +67,7 @@ process management, memory management, and terminal control.
 
 # Installation #
 
-git clone https://github.com/username/minishell.git
+git clone git@github.com:beratgursess22/Minishell.git
 
 cd minishell
 
