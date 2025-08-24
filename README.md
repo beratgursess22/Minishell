@@ -38,9 +38,42 @@ process management, memory management, and terminal control.
 
 1- Handles Ctrl-C, Ctrl-D, Ctrl-\
 
-# Environment variables: Managed with a linked list #
+# Environment variables : Managed with a linked list
 
-# Error handling: Proper messages for invalid commands, redirection errors, etc. #
+# Error handling: Proper messages for invalid commands, redirection errors, etc.
+
+# How It Works # 
+
+1- Get user input → readline("minishell $ ")
+
+2 -Lexer → Split input into tokens (ls -l | grep txt > out)
+
+3- Parser → Build a command list based on pipes/redirections
+
+4- Expander → Expand env variables ($PATH, $?, $USER)
+
+5- Executor →
+
+6- If built-in → run directly
+
+7- Else → find path → fork + execve
+
+8- Handle pipes/redirections with dup2
+
+9- Parent process → Wait for children with waitpid
+
+10- Return to prompt
+
+
+# Installation #
+
+git clone https://github.com/username/minishell.git
+cd minishell
+make
+./minishell
+
+
+
 
 
 
