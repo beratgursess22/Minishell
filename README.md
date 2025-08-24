@@ -68,10 +68,12 @@ process management, memory management, and terminal control.
 # Installation #
 
 git clone https://github.com/username/minishell.git
-cd minishell
-make
-./minishell
 
+cd minishell
+
+make
+
+./minishell
 
 
 
